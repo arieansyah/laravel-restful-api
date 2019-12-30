@@ -17,9 +17,11 @@ Route::prefix('v1')->group(function () {
 
     Route::post('login', 'AuthController@login')->name('login');
     Route::post('register', 'AuthController@register')->name('register');
-    Route::post('customer/create', 'Api\CustomerController@CustomerCreate');
 
     Route::middleware(['auth:api'])->group(function () {
-
+        Route::post('logout', 'AuthController@logout')->name('logout');
+        Route::prefix('post')->group(function () {
+            Route::resource('/', 'PostController');
+        });
     });
 });

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Model\Posts;
+use Auth;
+use Validator;
 
 class PostController extends Controller
 {
@@ -34,7 +37,47 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $status = "error";
+        $message = "";
+        $data = null;
+        $code = 200;
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'content' => 'required',
+            'image' => 'required',
+        ]);
+        if (!$validator->fails()) {
+            $store = new Posts;
+            $store->author_id = Auth::user()->id;
+            $store->title = $request->title;
+            $store->content = $request->content;
+            $store->posted_at = now();
+
+            $img = $request->file('image');
+            if ($img) {
+                $img_path = $img->store('post', 'public');
+                $store->image = $img_path;
+            }
+
+            if($store->save()){
+                $status = "success";
+                $message = "Store Post Success";
+                $data = $store->toArray();
+            }
+            else{
+                $message = "Store Post Failed";
+            }
+        }else {
+            $errors = $validator->errors();
+            $message = $errors;
+        }
+
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+            'data' => $data
+        ], $code);
     }
 
     /**
