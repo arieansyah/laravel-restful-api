@@ -36,8 +36,10 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Posts $post)
     {
+        $this->authorize('store', $post);
+
         $status = "error";
         $message = "";
         $data = null;
@@ -110,8 +112,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Posts $post, $id)
     {
+        $this->authorize('update', $post);
         $status = "error";
         $message = "";
         $data = null;
