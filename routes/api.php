@@ -21,7 +21,10 @@ Route::prefix('v1')->group(function () {
     Route::middleware(['auth:api'])->group(function () {
         Route::post('logout', 'AuthController@logout')->name('logout');
         Route::prefix('post')->group(function () {
-            Route::resource('/', 'PostController');
+            Route::get('/', 'PostController@index');
+            Route::post('store', 'PostController@store');
+            Route::post('update/{id}', 'PostController@update');
+            Route::post('delete/{id}', 'PostController@destroy');
         });
     });
 });

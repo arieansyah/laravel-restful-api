@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Model\Posts;
 use Auth;
 use Validator;
+use App\Http\Resources\Post as PostResource;
 
 class PostController extends Controller
 {
@@ -16,7 +17,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        return new PostResource(Posts::paginate(2));
     }
 
     /**
@@ -111,7 +112,36 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $status = "error";
+        $message = "";
+        $data = null;
+        $code = 200;
+
+        $update = Posts::find($id);
+        $update->author_id = Auth::user()->id;
+        $update->title = $request->title;
+        $update->content = $request->content;
+
+        $img = $request->file('image');
+        if ($img) {
+            $img_path = $img->store('post', 'public');
+            $update->image = $img_path;
+        }
+
+        if($update->update()){
+            $status = "success";
+            $message = "Update Post Success";
+            $data = $update->toArray();
+        }
+        else{
+            $message = "Update Post Failed";
+        }
+
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+            'data' => $data
+        ], $code);
     }
 
     /**
@@ -122,6 +152,21 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $status = "error";
+        $message = "";
+        $data = null;
+        $code = 200;
+        $data = Posts::find($id);
+        if($data){
+            $data->delete();
+            $status = "success";
+            $message = "Delete Post Success";
+        }else{
+            $message = "Delete Post Failed";
+        }
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+        ], $code);
     }
 }
