@@ -18,4 +18,9 @@ class PostPolicy
     {
         return count(array_intersect(["ADMIN"], json_decode($user->roles)));
     }
+
+    public function delete(User $user)
+    {
+        return count(array_intersect(["ADMIN"], json_decode($user->roles)));
+    }
 }

@@ -7,6 +7,7 @@ use App\Model\Posts;
 use Auth;
 use Validator;
 use App\Http\Resources\Post as PostResource;
+use App\Events\PostEvent;
 
 class PostController extends Controller
 {
@@ -67,6 +68,7 @@ class PostController extends Controller
                 $status = "success";
                 $message = "Store Post Success";
                 $data = $store->toArray();
+                event(new PostEvent($store));
             }
             else{
                 $message = "Store Post Failed";
@@ -135,6 +137,7 @@ class PostController extends Controller
             $status = "success";
             $message = "Update Post Success";
             $data = $update->toArray();
+            event(new PostEvent($update));
         }
         else{
             $message = "Update Post Failed";
@@ -153,8 +156,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Posts $post, $id)
     {
+        $this->authorize('delete', $post);
         $status = "error";
         $message = "";
         $data = null;
@@ -164,6 +168,7 @@ class PostController extends Controller
             $data->delete();
             $status = "success";
             $message = "Delete Post Success";
+            event(new PostEvent($data));
         }else{
             $message = "Delete Post Failed";
         }
