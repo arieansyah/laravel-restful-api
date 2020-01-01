@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Model\Posts;
+use App\Model\Post;
 use Auth;
 use Validator;
 use App\Http\Resources\Post as PostResource;
@@ -18,7 +18,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return new PostResource(Posts::paginate(2));
+        return new PostResource(Post::paginate(2));
     }
 
     /**
@@ -37,7 +37,7 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Posts $post)
+    public function store(Request $request, Post $post)
     {
         $this->authorize('store', $post);
 
@@ -52,7 +52,7 @@ class PostController extends Controller
             'image' => 'required',
         ]);
         if (!$validator->fails()) {
-            $store = new Posts;
+            $store = new Post;
             $store->author_id = Auth::user()->id;
             $store->title = $request->title;
             $store->content = $request->content;
@@ -114,7 +114,7 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Posts $post, $id)
+    public function update(Request $request, Post $post, $id)
     {
         $this->authorize('update', $post);
         $status = "error";
@@ -122,7 +122,7 @@ class PostController extends Controller
         $data = null;
         $code = 200;
 
-        $update = Posts::find($id);
+        $update = Post::find($id);
         $update->author_id = Auth::user()->id;
         $update->title = $request->title;
         $update->content = $request->content;
@@ -156,14 +156,14 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Posts $post, $id)
+    public function destroy(Post $post, $id)
     {
         $this->authorize('delete', $post);
         $status = "error";
         $message = "";
         $data = null;
         $code = 200;
-        $data = Posts::find($id);
+        $data = Post::find($id);
         if($data){
             $data->delete();
             $status = "success";

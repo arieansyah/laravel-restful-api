@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Events\PostEvent;
 use App\Model\PostLog;
-use App\Model\Posts;
+use App\Model\Post;
 use Auth;
 
 class SendToLog
@@ -31,7 +31,7 @@ class SendToLog
      */
     public function handle(PostEvent $event)
     {
-        $data = Posts::find($event->post->id);
+        $data = Post::find($event->post->id);
         if ($data) {
             $now = now('Asia/Jakarta')->diffInMinutes($data->posted_at);
             if ($now < 1) {
