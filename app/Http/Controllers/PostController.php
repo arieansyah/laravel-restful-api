@@ -64,16 +64,15 @@ class PostController extends Controller
                 $store->image = $img_path;
             }
 
-            if($store->save()){
+            if ($store->save()) {
                 $status = "success";
                 $message = "Store Post Success";
                 $data = $store->toArray();
                 event(new PostEvent($store));
-            }
-            else{
+            } else {
                 $message = "Store Post Failed";
             }
-        }else {
+        } else {
             $errors = $validator->errors();
             $message = $errors;
         }
@@ -133,13 +132,12 @@ class PostController extends Controller
             $update->image = $img_path;
         }
 
-        if($update->update()){
+        if ($update->update()) {
             $status = "success";
             $message = "Update Post Success";
             $data = $update->toArray();
             event(new PostEvent($update));
-        }
-        else{
+        } else {
             $message = "Update Post Failed";
         }
 
@@ -164,12 +162,12 @@ class PostController extends Controller
         $data = null;
         $code = 200;
         $data = Post::find($id);
-        if($data){
+        if ($data) {
             $data->delete();
             $status = "success";
             $message = "Delete Post Success";
             event(new PostEvent($data));
-        }else{
+        } else {
             $message = "Delete Post Failed";
         }
         return response()->json([
