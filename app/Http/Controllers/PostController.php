@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Model\Post;
 use Auth;
 use Validator;
-use App\Http\Resources\Post as PostResource;
+use App\Http\Resources\Post as PostResourceCollection;
 use App\Events\PostEvent;
 
 class PostController extends Controller
@@ -18,7 +18,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return new PostResource(Post::paginate(2));
+        return new PostResourceCollection(Post::paginate(2));
     }
 
     /**

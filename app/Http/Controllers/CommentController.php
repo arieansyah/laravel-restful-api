@@ -8,8 +8,7 @@ use App\Model\Comment;
 use App\Model\Post;
 use Auth;
 use Illuminate\Support\Facades\Redis;
-use App\Http\Resources\Comment as CommentResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Resources\Comment as CommentResourceCollection;
 use Validator;
 
 class CommentController extends Controller
@@ -59,23 +58,8 @@ class CommentController extends Controller
 
     public function show()
     {
-        // $status = false;
-        // $message = "Param Required";
-        // $data = null;
-        // // $code = 422;
+        $comment = Post::with('comments')->get();
+        return new CommentResourceCollection($comment);
 
-        $status = true;
-        $message = "get data success";
-        $code = 200;
-
-        $data = Post::with([
-            'comments'
-        ])->get();
-
-        return response()->json([
-            'status' => $status,
-            'message' => $message,
-            'data' => $data
-        ], $code);
     }
 }
