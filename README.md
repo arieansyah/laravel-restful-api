@@ -5,5 +5,7 @@
 4. Buat file .env via terminal `cp env.example .env`
 5. Update konfigurasi database pada file `.env`
 6. Jalankan Perintah via terminal or CMD `composer install`
-6. Migrate database via terminal `php artisan migrate`
-7. Jalankan `php artisan serve`
+7. Migrate database via terminal `php artisan key:generate`
+8. Migrate database via terminal `php artisan jwt:secret`
+9. Migrate database via terminal `php artisan migrate`
+10. Jalankan `php artisan serve`
