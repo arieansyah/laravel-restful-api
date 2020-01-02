@@ -1,11 +1,11 @@
 # How To Install
-1. Pastikan anda sudah menginstalasi web server (Apache / Nginx), PHP, dan MySQL
-2. Clone repository ini
-3. Buat database
-4. Buat file .env via terminal `cp env.example .env`
-5. Update konfigurasi database pada file `.env`
-6. Jalankan Perintah via terminal or CMD `composer install`
-7. Migrate database via terminal `php artisan key:generate`
-8. Migrate database via terminal `php artisan jwt:secret`
-9. Migrate database via terminal `php artisan migrate`
-10. Jalankan `php artisan serve`
+1. Make sure you have installed a web server (Apache / Nginx), PHP, and MySQL
+2. Clone this Repository
+3. Create database
+4. Make file .env via terminal or CMD `cp env.example .env`
+5. Update Configuration database in file `.env`
+6. Run Commend via terminal or CMD `composer install`
+7. Run  `php artisan key:generate`
+8. Run `php artisan jwt:secret`
+9. Run `php artisan migrate`
+10. Run `php artisan serve`
