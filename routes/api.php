@@ -26,5 +26,12 @@ Route::prefix('v1')->group(function () {
             Route::post('update/{id}', 'PostController@update');
             Route::post('delete/{id}', 'PostController@destroy');
         });
+
+        Route::prefix('comment')->group(function () {
+            Route::post('store', 'CommentController@store');
+            Route::get('show', 'CommentController@show');
+            // Route::post('update/{id}', 'CommentController@update');
+            // Route::post('delete/{id}', 'CommentController@destroy');
+        });
     });
 });

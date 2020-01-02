@@ -11,6 +11,16 @@
 |
 */
 
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+use Illuminate\Support\Facades\Redis;
+
 Route::get('/', function () {
-    return view('welcome');
+    // $app = Redis::connection();
+    // $app->set('key', 'Testing PhpRedis');
+    // echo $app->get('key');
+    $p = Redis::incr('p');
+    return $p;
 });
