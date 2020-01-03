@@ -59,6 +59,8 @@ class CommentController extends Controller
 
     public function show()
     {
+        // $cek = Redis::get('17');
+        // dd($cek);
         $comment = Post::with('comments')->get();
         return new CommentResourceCollection($comment);
 

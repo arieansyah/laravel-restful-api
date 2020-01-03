@@ -7,21 +7,22 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Model\Post;
+use App\Model\Comment;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 
 class CommentUser implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    protected $post;
+    public $comment;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Comment $comment)
     {
-        // $this->post = $post;
+        $this->comment = $comment;
     }
 
     /**
@@ -31,6 +32,7 @@ class CommentUser implements ShouldQueue
      */
     public function handle()
     {
-        Log::info("Working");
+        Log::info($this->comment->content);
+        // Redis::set($this->comment->id, $this->comment);
     }
 }
