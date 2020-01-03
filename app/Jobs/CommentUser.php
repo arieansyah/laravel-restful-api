@@ -33,6 +33,6 @@ class CommentUser implements ShouldQueue
     public function handle()
     {
         Log::info($this->comment->content);
-        // Redis::set($this->comment->id, $this->comment);
+        Redis::set($this->comment, json_encode($this->comment));
     }
 }
