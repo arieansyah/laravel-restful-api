@@ -41,6 +41,7 @@ class CommentController extends Controller
                 $status = "success";
                 $message = "Store Comment Success";
                 $data = $comment->toArray();
+                CommentUser::dispatch($comment);
             } else {
                 $message = "Store Comment Failed";
             }

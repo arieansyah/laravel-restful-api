@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Model\Post;
+use Illuminate\Support\Facades\Log;
 
 class CommentUser implements ShouldQueue
 {
@@ -18,9 +19,9 @@ class CommentUser implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Post $post)
+    public function __construct()
     {
-        $this->post = $post;
+        // $this->post = $post;
     }
 
     /**
@@ -30,6 +31,6 @@ class CommentUser implements ShouldQueue
      */
     public function handle()
     {
-
+        Log::info("Working");
     }
 }
