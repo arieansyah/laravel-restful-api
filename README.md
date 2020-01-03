@@ -9,7 +9,6 @@
 - Set `QUEUE_CONNECTION=redis`
 - Run `php artisan key:generate`
 - Run `php artisan jwt:secret`
-- Run `php artisan jwt:secret`
 - Run `php artisan config:cache`
 - Run `php artisan migrate`
 - Run `php artisan serve`
