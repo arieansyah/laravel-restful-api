@@ -6,9 +6,10 @@ use Illuminate\Http\Request;
 use App\Model\Post;
 use Auth;
 use Validator;
-use App\Http\Resources\Post as PostResourceCollection;
+use App\Http\Resources\Post as PostResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Events\PostEvent;
-
+use App\Http\Requests\PostRequest;
 class PostController extends Controller
 {
     /**
@@ -18,17 +19,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return new PostResourceCollection(Post::paginate(2));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return PostResource::collection(Post::paginate(2));
     }
 
     /**
@@ -37,73 +28,19 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Post $post)
+    public function store(PostRequest $request, Post $post)
     {
         $this->authorize('store', $post);
 
-        $status = "error";
-        $message = "";
-        $data = null;
-        $code = 200;
+        $img = $request->file('image');
+        $img_path = $img->store('post', 'public');
 
-        $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'content' => 'required',
-            'image' => 'required',
-        ]);
-        if (!$validator->fails()) {
-            $store = new Post;
-            $store->author_id = Auth::user()->id;
-            $store->title = $request->title;
-            $store->content = $request->content;
-            $store->posted_at = now();
+        $news = Post::create($request->all());
+        $news->image = $img_path;
+        $news->save();
+        return new PostResource($news);
 
-            $img = $request->file('image');
-            if ($img) {
-                $img_path = $img->store('post', 'public');
-                $store->image = $img_path;
-            }
-
-            if ($store->save()) {
-                $status = "success";
-                $message = "Store Post Success";
-                $data = $store->toArray();
-                event(new PostEvent($store));
-            } else {
-                $message = "Store Post Failed";
-            }
-        } else {
-            $errors = $validator->errors();
-            $message = $errors;
-        }
-
-        return response()->json([
-            'status' => $status,
-            'message' => $message,
-            'data' => $data
-        ], $code);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        event(new PostEvent($store));
     }
 
     /**
@@ -113,41 +50,19 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post, $id)
+    public function update(PostRequest $request, Post $post, $id)
     {
         $this->authorize('update', $post);
-        $status = "error";
-        $message = "";
-        $data = null;
-        $code = 200;
-
-        $update = Post::find($id);
-        $update->author_id = Auth::user()->id;
-        $update->title = $request->title;
-        $update->content = $request->content;
 
         $img = $request->file('image');
-        if ($img) {
-            $img_path = $img->store('post', 'public');
-            $update->image = $img_path;
-        }
+        $requestData = $request->all();
+        $requestData['image'] = $img->store('post', 'public');
+        $post->find($id)->update($requestData);
 
-        if ($update->update()) {
-            $status = "success";
-            $message = "Update Post Success";
-            $data = $update->toArray();
-            event(new PostEvent($update));
-        } else {
-            $message = "Update Post Failed";
-        }
+        event(new PostEvent($post));
+        return new PostResource($post->find($id));
 
-        return response()->json([
-            'status' => $status,
-            'message' => $message,
-            'data' => $data
-        ], $code);
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -157,11 +72,8 @@ class PostController extends Controller
     public function destroy(Post $post, $id)
     {
         $this->authorize('delete', $post);
-        $status = "error";
-        $message = "";
-        $data = null;
-        $code = 200;
-        $data = Post::find($id);
+
+        $data = $post->find($id);
         if ($data) {
             $data->delete();
             $status = "success";
@@ -170,9 +82,6 @@ class PostController extends Controller
         } else {
             $message = "Delete Post Failed";
         }
-        return response()->json([
-            'status' => $status,
-            'message' => $message,
-        ], $code);
+        return response()->json(['message' => $message]);
     }
 }
