@@ -10,6 +10,7 @@ use App\Http\Resources\Post as PostResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Events\PostEvent;
 use App\Http\Requests\PostRequest;
+
 class PostController extends Controller
 {
     /**
@@ -76,7 +77,6 @@ class PostController extends Controller
         $data = $post->find($id);
         if ($data) {
             $data->delete();
-            $status = "success";
             $message = "Delete Post Success";
             event(new PostEvent($data));
         } else {
